@@ -1,14 +1,5 @@
 <template>
   <div class="min-h-screen bg-white">
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200">
-      <div class="max-w-3xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center h-16">
-          <h1 class="text-xl font-semibold text-slate-900 font-sans">{{ page?.name || 'Page not found' }}</h1>
-        </div>
-      </div>
-    </header>
-
     <!-- Content -->
     <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
       <div v-if="isLoading" class="flex justify-center py-12">
