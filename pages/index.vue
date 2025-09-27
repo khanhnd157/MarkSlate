@@ -62,6 +62,12 @@
       </template>
     </Modal>
     
+    <!-- Public Pages Modal -->
+    <PublicPagesModal
+      :is-open="showPublicPagesModal"
+      @close="showPublicPagesModal = false"
+    />
+    
     <!-- Share Modal -->
     <Modal
       :is-open="showShareModal"
@@ -224,7 +230,7 @@
             />
             <span class="text-sm text-slate-500">Ask Slate AI...</span>
             <div class="ml-auto flex items-center">
-              <kbd class="px-1.5 py-0.5 text-xs font-mono text-slate-400 bg-slate-200/50 rounded">⌘K</kbd>
+              <kbd class="px-1.5 py-0.5 text-xs font-mono text-slate-400 bg-slate-200/50 rounded">cmd K</kbd>
             </div>
           </button>
           <button 
@@ -275,7 +281,7 @@
                 {{ user.user_metadata?.full_name }}
               </div>
               <button
-                @click="router.push('/pages')"
+                @click="showPublicPagesModal = true; showUserMenu = false"
                 class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
               >
                 Public Pages
@@ -356,6 +362,7 @@
 import { ref, onMounted, nextTick, computed, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import Modal from '../components/Modal.vue';
+import PublicPagesModal from '../components/PublicPagesModal.vue';
 import TurndownService from 'turndown';
 import { useStorage } from '../composables/useStorage';
 import { useRouter } from 'vue-router';
@@ -424,6 +431,7 @@ const isSidebarOpen = ref(true);
 const showExportModal = ref(false);
 const isExporting = ref(false);
 const showShareModal = ref(false);
+const showPublicPagesModal = ref(false);
 const publishPageName = ref('');
 const isPublishing = ref(false);
 const publishedPageId = ref(null);
@@ -813,7 +821,7 @@ async function copyPageId() {
 .pdf-export {
   background: white;
   color: #1a1a1a;
-  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .pdf-export h1 {

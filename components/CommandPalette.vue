@@ -45,7 +45,7 @@
             <div class="relative p-4">
               <textarea
                 v-model="prompt"
-                class="w-full border-0 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 text-base leading-relaxed resize-none min-h-[2.5rem] max-h-32"
+                class="w-full border-0 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 text-sm leading-relaxed resize-none min-h-[2.5rem] max-h-32"
                 :placeholder="props.selectedContent === props.fullContent 
                   ? 'Ask Slate AI to help with editing...' 
                   : 'Ask Slate AI to help with the selected text...'"
@@ -55,7 +55,7 @@
                 rows="1"
               />
               
-              <div v-if="isLoading" class="absolute right-4 top-4">
+              <div v-if="isLoading" class="absolute right-12 top-4">
                 <Icon icon="lucide:loader-2" class="w-5 h-5 text-slate-400 animate-spin" />
               </div>
             </div>

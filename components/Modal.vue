@@ -25,11 +25,20 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel 
-              class="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all border border-slate-200/50"
+              :class="[modalClass, 'transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all border border-slate-200/50 relative']"
             >
+              <!-- Close button in top right -->
+              <button 
+                @click="close"
+                class="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 transition-all duration-200"
+                title="Close"
+              >
+                <Icon icon="lucide:x" class="w-4 h-4" />
+              </button>
+              
               <DialogTitle 
                 as="h3" 
-                class="text-lg font-medium leading-6 text-slate-900 mb-4"
+                class="text-lg font-medium leading-6 text-slate-900 mb-4 pr-8"
               >
                 {{ title }}
               </DialogTitle>
@@ -72,8 +81,9 @@
 
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue';
+import { Icon } from '@iconify/vue';
 
-defineProps({
+const props = defineProps({
   isOpen: {
     type: Boolean,
     required: true
@@ -89,6 +99,10 @@ defineProps({
   danger: {
     type: Boolean,
     default: false
+  },
+  modalClass: {
+    type: String,
+    default: 'w-full max-w-md'
   }
 });
 
