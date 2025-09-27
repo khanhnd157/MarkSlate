@@ -36,14 +36,6 @@
           Saved
         </div>
       </transition>
-      
-      <button
-        @click="saveContent"
-        class="p-2 rounded-md bg-white shadow-sm border border-slate-200/50 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-all duration-200 active:scale-95"
-        title="Save (⌘S)"
-      >
-        <Icon icon="lucide:save" class="w-4 h-4" />
-      </button>
     </div>
     
     <!-- Editor Content -->
@@ -284,7 +276,8 @@ defineExpose({
   formatMenuItems,
   listMenuItems,
   insertMenuItems,
-  handleCommandPalette
+  handleCommandPalette,
+  saveContent
 });
 
 const showCommandPalette = ref(false);
@@ -318,10 +311,10 @@ onBeforeUnmount(() => {
 });
 
 function handleKeydown(e) {
-  // Open command palette on Cmd/Ctrl + K
+  // Toggle command palette on Cmd/Ctrl + K
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
     e.preventDefault();
-    showCommandPalette.value = true;
+    showCommandPalette.value = !showCommandPalette.value;
   }
 }
 
@@ -349,7 +342,7 @@ function updateSelectedText(newContent) {
 }
 
 function handleCommandPalette() {
-  showCommandPalette.value = true;
+  showCommandPalette.value = !showCommandPalette.value;
 }
 
 // Watch for fileId changes to load content

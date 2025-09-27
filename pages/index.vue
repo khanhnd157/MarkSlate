@@ -215,13 +215,24 @@
         <div class="flex items-center gap-4">
           <button 
             @click="editorRef?.handleCommandPalette()"
-            class="p-2 rounded-md bg-blue-100 text-blue-500 hover:text-blue-600 transition-all duration-150 active:scale-95 group"
+            class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/50 text-slate-600 hover:bg-slate-200/50 hover:text-slate-800 transition-all duration-150 active:scale-95 group min-w-[200px] justify-start"
             title="Open AI Assistant (⌘K)"
           >
             <Icon 
               icon="lucide:sparkles" 
-              class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-150" 
+              class="w-4 h-4 text-blue-500" 
             />
+            <span class="text-sm text-slate-500">Ask Slate AI...</span>
+            <div class="ml-auto flex items-center">
+              <kbd class="px-1.5 py-0.5 text-xs font-mono text-slate-400 bg-slate-200/50 rounded">⌘K</kbd>
+            </div>
+          </button>
+          <button 
+            @click="editorRef?.saveContent()"
+            class="p-1.5 rounded-md hover:bg-gray-50 text-gray-500 hover:text-gray-900 transition-all duration-150 active:scale-95"
+            title="Save (⌘S)"
+          >
+            <Icon icon="lucide:save" class="w-4 h-4" />
           </button>
           <div class="h-4 w-px bg-gray-200 mx-2"></div>
           <button 

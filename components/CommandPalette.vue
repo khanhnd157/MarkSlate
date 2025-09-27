@@ -1,15 +1,14 @@
 <template>
   <Transition
-    enter-active-class="transition duration-300 ease-out"
-    enter-from-class="translate-y-full"
-    enter-to-class="translate-y-0"
-    leave-active-class="transition duration-200 ease-in"
-    leave-from-class="translate-y-0"
-    leave-to-class="translate-y-full"
+    enter-active-class="transition duration-200 ease-out"
+    enter-from-class="opacity-0 scale-95"
+    enter-to-class="opacity-100 scale-100"
+    leave-active-class="transition duration-150 ease-in"
+    leave-from-class="opacity-100 scale-100"
+    leave-to-class="opacity-0 scale-95"
   >
-    <div v-if="isOpen" class="fixed inset-x-0 bottom-0 z-50">
-      <div class="mx-auto max-w-2xl w-full px-4 pb-4">
-        <div class="bg-white rounded-lg shadow-xl border border-slate-200/50 overflow-hidden">
+    <div v-if="isOpen" class="command-palette fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[480px] max-w-[90vw]">
+      <div class="relative bg-white/95 backdrop-blur border border-slate-200/50 rounded-xl shadow-lg overflow-hidden flex flex-col max-h-[60vh]">
           <!-- Login Prompt for Unauthenticated Users -->
           <div v-if="!user" class="p-4">
             <div class="flex items-center gap-3 mb-4">
@@ -30,46 +29,47 @@
             </button>
           </div>
 
-          <!-- Selection Preview (Only show when authenticated) -->
-          <div v-if="user && props.selectedContent !== props.fullContent" class="px-4 py-2 border-b border-slate-100 bg-slate-50/50">
-            <div class="flex items-center gap-2">
-              <Icon icon="lucide:text-select" class="w-3.5 h-3.5 text-slate-400" />
-              <p class="text-xs text-slate-500 truncate">
-                {{ truncateText(stripHtml(props.selectedContent), 100) }}
-              </p>
+          <!-- Content for authenticated users -->
+          <div v-if="user">
+            <!-- Selection Preview (when applicable) -->
+            <div v-if="props.selectedContent !== props.fullContent" class="px-4 py-3 pr-12 border-b border-slate-100/50 bg-slate-50/30">
+              <div class="flex items-center gap-2">
+                <Icon icon="lucide:text-select" class="w-3.5 h-3.5 text-slate-400" />
+                <p class="text-xs text-slate-500 truncate">
+                  Selected: {{ truncateText(stripHtml(props.selectedContent), 80) }}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <!-- Input and Prompts (Only show when authenticated) -->
-          <div v-if="user" class="relative">
-            <input
-              v-model="prompt"
-              type="text"
-              class="w-full border-0 bg-transparent p-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 text-base"
-              :placeholder="props.selectedContent === props.fullContent 
-                ? 'Ask Slate AI to help with editing the document...' 
-                : 'Ask Slate AI to help with editing the selected text...'"
-              @keyup.enter="handleSubmit"
-              ref="inputRef"
-            />
-            
-            <div v-if="isLoading" class="absolute right-4 top-4">
-              <Icon icon="lucide:loader-2" class="w-5 h-5 text-slate-400 animate-spin" />
+            <!-- Input Area -->
+            <div class="relative p-4">
+              <textarea
+                v-model="prompt"
+                class="w-full border-0 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 text-base leading-relaxed resize-none min-h-[2.5rem] max-h-32"
+                :placeholder="props.selectedContent === props.fullContent 
+                  ? 'Ask Slate AI to help with editing...' 
+                  : 'Ask Slate AI to help with the selected text...'"
+                @keydown="handleTextareaKeydown"
+                @input="autoResize"
+                ref="inputRef"
+                rows="1"
+              />
+              
+              <div v-if="isLoading" class="absolute right-4 top-4">
+                <Icon icon="lucide:loader-2" class="w-5 h-5 text-slate-400 animate-spin" />
+              </div>
             </div>
-          </div>
-          
-          <!-- Helper Prompts (Only show when authenticated) -->
-          <div v-if="user" class="px-4 py-3 bg-slate-50 border-t border-slate-100">
-            <div class="flex flex-col gap-2">
-              <p class="text-xs font-medium text-slate-500">Quick prompts:</p>
-              <div class="flex flex-wrap gap-2">
+
+            <!-- Helper Prompts -->
+            <div class="px-4 pb-4 border-t border-slate-100/50">
+              <div class="grid grid-cols-2 gap-2 mt-3">
                 <template v-if="props.selectedContent !== props.fullContent">
                   <!-- Selected text prompts -->
                   <button
                     v-for="suggestion in selectedTextPrompts"
                     :key="suggestion"
                     @click="usePrompt(suggestion)"
-                    class="text-xs px-2 py-1 rounded-md bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300 transition-all duration-200"
+                    class="text-xs px-3 py-2 rounded-md bg-slate-50 text-slate-700 hover:bg-slate-100 transition-all duration-200 text-left"
                   >
                     {{ suggestion }}
                   </button>
@@ -80,7 +80,7 @@
                     v-for="suggestion in fullDocumentPrompts"
                     :key="suggestion"
                     @click="usePrompt(suggestion)"
-                    class="text-xs px-2 py-1 rounded-md bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300 transition-all duration-200"
+                    class="text-xs px-3 py-2 rounded-md bg-slate-50 text-slate-700 hover:bg-slate-100 transition-all duration-200 text-left"
                   >
                     {{ suggestion }}
                   </button>
@@ -89,17 +89,18 @@
             </div>
           </div>
           
-          <div v-if="error" class="px-4 py-3 bg-red-50 border-t border-red-100">
+          <div v-if="error" class="px-4 py-3 bg-red-50/80 border-t border-red-100/50">
             <p class="text-sm text-red-600">{{ error }}</p>
           </div>
-        </div>
-        <!-- Close button -->
-        <button 
-          @click="close"
-          class="mt-2 mx-auto block p-2 rounded-full bg-white/80 backdrop-blur border border-slate-200/50 text-slate-400 hover:text-slate-600 transition-all duration-200"
-        >
-          <Icon icon="lucide:x" class="w-5 h-5" />
-        </button>
+          
+          <!-- Close button - positioned at top right -->
+          <button 
+            @click="close"
+            class="absolute top-3 right-3 p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100/50 transition-all duration-200"
+            title="Close (Esc)"
+          >
+            <Icon icon="lucide:x" class="w-3.5 h-3.5" />
+          </button>
       </div>
     </div>
   </Transition>
@@ -131,13 +132,15 @@ const supabase = useSupabaseClient();
 const selectedTextPrompts = [
   'Fix grammar',
   'Make it LinkedIn-friendly',
-  'Convert to bullet points'
+  'Convert to bullet points',
+  'Simplify and clarify'
 ];
 
 const fullDocumentPrompts = [
   'Create a travel checklist',
   'Create a marketing plan for my mobile app',
-  'Create a survey'
+  'Create a survey',
+  'Write a blog post outline'
 ];
 
 async function handleSubmit() {
@@ -201,6 +204,33 @@ function usePrompt(suggestion) {
   handleSubmit();
 }
 
+function handleTextareaKeydown(e) {
+  // Submit on Enter (but not Shift+Enter)
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    handleSubmit();
+  }
+  
+  // Handle Ctrl+A/Cmd+A to select only textarea content
+  if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+    e.preventDefault();
+    e.stopPropagation();
+    // Select all text in the textarea
+    if (inputRef.value) {
+      inputRef.value.select();
+    }
+  }
+  // Allow Shift+Enter for new lines (default behavior)
+}
+
+function autoResize() {
+  const textarea = inputRef.value;
+  if (textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 128) + 'px'; // max-h-32 = 128px
+  }
+}
+
 function stripHtml(html) {
   const tmp = document.createElement('DIV');
   tmp.innerHTML = html;
@@ -216,16 +246,31 @@ function truncateText(text, wordLimit) {
 onMounted(() => {
   // Setup keyboard shortcut
   window.addEventListener('keydown', handleKeydown);
+  // Prevent global select all when CommandPalette is open
+  window.addEventListener('keydown', handleGlobalKeydown);
 });
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener('keydown', handleGlobalKeydown);
 });
 
 function handleKeydown(e) {
   // Close on escape
   if (e.key === 'Escape' && props.isOpen) {
     close();
+  }
+}
+
+function handleGlobalKeydown(e) {
+  // Prevent global Ctrl+A/Cmd+A when CommandPalette is open and focused
+  if (props.isOpen && (e.ctrlKey || e.metaKey) && e.key === 'a') {
+    const activeElement = document.activeElement;
+    // Only prevent if the textarea is focused or CommandPalette is the active area
+    if (activeElement === inputRef.value || activeElement?.closest('.command-palette')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   }
 }
 
@@ -242,6 +287,10 @@ watch(() => props.isOpen, async (isOpen) => {
     await nextTick();
     if (user.value) {
       inputRef.value?.focus();
+      // Reset textarea height
+      if (inputRef.value) {
+        inputRef.value.style.height = 'auto';
+      }
     }
   }
 });
