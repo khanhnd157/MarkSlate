@@ -1,0 +1,24 @@
+/* TEAM */
+
+Creator: Kiran Johns
+X/Twitter: @thetronjohnson
+GitHub: @thetronjohnson
+Location: Earth
+
+/* SITE */
+
+Standards: HTML5, CSS3, JavaScript (ES6+)
+Components: Vue 3, Nuxt 4, TipTap
+Styling: Tailwind CSS
+Backend: Supabase, OpenAI
+Analytics: PostHog
+Fonts: Lato, JetBrains Mono (Google Fonts)
+
+/* THANKS */
+
+AI: Powered by OpenAI GPT-4o-mini
+Editor: Built with TipTap
+Icons: Lucide Icons
+Hosting: Vercel (assumed)
+
+Last update: 2025/10/17

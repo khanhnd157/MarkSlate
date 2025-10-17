@@ -1,0 +1,12 @@
+Contact: mailto:hi@kiranjohns.com
+Expires: 2026-10-17T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://slate.ink/.well-known/security.txt
+
+# Security Policy
+
+If you discover a security vulnerability in Slate, please report it to us.
+
+# Acknowledgments
+
+We appreciate responsible disclosure and will acknowledge security researchers who help improve Slate's security.
