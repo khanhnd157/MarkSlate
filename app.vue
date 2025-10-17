@@ -8,13 +8,15 @@ import posthog from 'posthog-js';
 
 const config = useRuntimeConfig();
 const user = useSupabaseUser();
+const router = useRouter();
 
 // Initialize PostHog
 if (process.client) {  // Only initialize on client-side
   posthog.init(config.public.posthogKey, {
     api_host: config.public.posthogHost,
     person_profiles: 'identified_only',
-    capture_pageview: false // We'll handle pageviews manually
+    capture_pageview: true, // Enable automatic pageview tracking
+    capture_pageleave: true, // Track when users leave pages
   });
 }
 
@@ -61,5 +63,34 @@ onMounted(() => {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, { immediate: true });
+
+  // Track page views with UTM parameters and traffic source on route changes
+  if (process.client) {
+    router.afterEach((to, from) => {
+      // Get URL parameters (including UTM parameters)
+      const urlParams = new URLSearchParams(window.location.search);
+      const utmParams = {};
+
+      // Extract all UTM parameters
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+        const value = urlParams.get(param);
+        if (value) {
+          utmParams[param] = value;
+        }
+      });
+
+      // Capture the page view with additional context
+      posthog.capture('$pageview', {
+        $current_url: window.location.href,
+        path: to.path,
+        ...utmParams,
+        referrer: document.referrer || 'direct',
+        // Store UTM parameters as super properties for the session
+        ...(Object.keys(utmParams).length > 0 && {
+          $set: utmParams
+        })
+      });
+    });
+  }
 });
 </script> 
