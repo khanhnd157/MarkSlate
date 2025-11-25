@@ -255,8 +255,11 @@
           >
             <Icon icon="lucide:file-down" class="w-4 h-4" />
           </button>
-          <a href="https://github.com/thetronjohnson/slate/" target="_blank" class="p-1.5 rounded-md hover:bg-gray-50 text-gray-500 hover:text-gray-900 transition-all duration-150 active:scale-95" title="Follow on X">
+          <a href="https://github.com/thetronjohnson/slate/" target="_blank" class="p-1.5 rounded-md hover:bg-gray-50 text-gray-500 hover:text-gray-900 transition-all duration-150 active:scale-95" title="View on GitHub">
             <Icon icon="lucide:github" class="w-4 h-4" />
+          </a>
+          <a href="https://www.kiranjohns.com" target="_blank" class="p-1.5 rounded-md hover:bg-gray-50 text-gray-500 hover:text-gray-900 transition-all duration-150 active:scale-95" title="Visit Website">
+            <Icon icon="lucide:globe" class="w-4 h-4" />
           </a>
           <div class="h-4 w-px bg-gray-200"></div>
           <!-- User Profile / Login Button -->
