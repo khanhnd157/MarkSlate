@@ -8,7 +8,7 @@
       <div v-else-if="error" class="text-sm text-red-500">Failed to load links</div>
       
       <ul v-else class="space-y-2">
-        <li v-for="link in data" :key="link.url">
+        <li v-for="link in data?.links" :key="link.url">
           <a 
             :href="link.url" 
             target="_blank" 
